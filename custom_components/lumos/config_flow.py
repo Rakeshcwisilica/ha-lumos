@@ -185,14 +185,11 @@ class LumosConfigFlow(ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> LumosOptionsFlow:
-        return LumosOptionsFlow(config_entry)
+        return LumosOptionsFlow()
 
 
 class LumosOptionsFlow(OptionsFlow):
     """Handle Lumos integration options (e.g. polling interval)."""
-
-    def __init__(self, config_entry: ConfigEntry) -> None:
-        self.config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
