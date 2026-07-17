@@ -43,13 +43,13 @@ class LumosCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
       }
     """
 
-    def __init__(self, hass: HomeAssistant, api: LumosApi) -> None:
+    def __init__(self, hass: HomeAssistant, api: LumosApi, scan_interval: int = DEFAULT_SCAN_INTERVAL) -> None:
         self.api = api
         super().__init__(
             hass,
             _LOGGER,
             name=f"{DOMAIN}_coordinator",
-            update_interval=timedelta(seconds=DEFAULT_SCAN_INTERVAL),
+            update_interval=timedelta(seconds=scan_interval),
         )
 
     async def _async_update_data(self) -> dict[str, dict[str, Any]]:
