@@ -232,6 +232,7 @@ class LumosLight(CoordinatorEntity[LumosCoordinator], LightEntity):
         self._optimistic_on = True
         self.async_write_ha_state()
         self.hass.async_create_task(self._clear_optimistic_after(15))
+        self.hass.async_create_task(self.coordinator.async_request_refresh())
 
     async def _clear_optimistic_after(self, delay: int = 15) -> None:
         await asyncio.sleep(delay)
