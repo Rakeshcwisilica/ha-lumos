@@ -65,7 +65,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Build coordinator
     scan_interval = entry.options.get("scan_interval", DEFAULT_SCAN_INTERVAL)
-    coordinator = LumosCoordinator(hass, api)
+    coordinator = LumosCoordinator(hass, api, scan_interval)
 
     # First refresh – raise ConfigEntryNotReady on failure so HA retries
     try:
