@@ -153,11 +153,20 @@ class LumosApi:
     async def _post(self, path: str, payload: dict) -> dict:
         session = await self._get_session()
         url = self.base_url + path
-        _LOGGER.debug("POST %s  payload=%s", url, payload)
+        _CREDENTIAL_KEYS = {"userPassword", "token"}
+        _safe_payload = {k: "***" if k in _CREDENTIAL_KEYS else v for k, v in payload.items()}
+        _LOGGER.debug("POST %s  payload=%s", url, _safe_payload)
         async with session.post(url, json=payload, headers=self._auth_headers, ssl=True) as resp:
             resp.raise_for_status()
             data = await resp.json(content_type=None)
-            _LOGGER.debug("POST %s  response=%s", url, data)
+            _TOKEN_KEYS = {"token", "phoneLongId"}
+            try:
+                resp_data = data.get("Response", {}).get("Data", {})
+                _safe_data = {k: "***" if k in _TOKEN_KEYS else v for k, v in resp_data.items()}
+                _safe_resp = {**data, "Response": {**data["Response"], "Data": _safe_data}}
+            except Exception:
+                _safe_resp = data
+            _LOGGER.debug("POST %s  response=%s", url, _safe_resp)
             return data
 
     async def _put(self, path: str, payload: dict) -> dict:
